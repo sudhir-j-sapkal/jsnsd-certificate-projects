@@ -19,5 +19,27 @@ To prepare JSNSD certification exam Linux foundation provides one Learning Cours
  12. [Proxy Http Request With Single Origin Multiple Route](https://github.com/sudhir-j-sapkal/12_Proxy_Http_Request_Single_Origin_Multiroute)
  
  ## Quick Notes
+ 1. How Not to Install Node
+  ```bash
+Often Node.js can be installed with a particular Operating System's official or unofficial package manager. 
+For instance apt-get on Debian/Ubuntu, Brew on macOs, Chocolatey on Windows. 
+It is strongly recommended against using this approach to install Node. 
+Package managers tend to lag behind the faster Node.js release cycle. 
+Additionally the placement of binary and config files and folders 
+isn't standardized across OS package managers and can cause compatibility issues.
 
+Another significant issue with installing Node.js via an OS package manager 
+is that installing global modules with Node's module installer (npm) tends to require the 
+use of sudo (a command which grants root privileges) on non-Windows systems. 
+This is not an ideal setup for a developer machine and granting root privileges to the 
+install process of third-party libraries is not a good security practice.
+  ```
+  2. How to Use Express Generator 
+  ```bash
+  A tool called express-generator generates this structure with some other additions. 
+  We'll use the generator in the next chapter, for now we're concentrating on the 
+  bare bones to create the equivalent of our minimum viable web server that we implemented in the previous section.
  
+   express my-express-service
+  
+  ```
