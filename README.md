@@ -241,4 +241,21 @@ It is even possible to use JSONSchema with Express via various middleware offeri
 possibly because the implementations available cause significant performance overhead. 
 As a result the most common approach to validation in Express is to develop custom logic for the service as needed. 
 This isn't exactly recommended, but when dealing with legacy services it's useful to understand this aspect of real-world legacy Express development.
+
+Code Example 1
+function hasOwnProperty (o, p) {
+  return Object.prototype.hasOwnProperty.call(o, p);
+}
+
+function validateData (o) {
+  var valid = o !== null && typeof o === 'object';
+  valid = valid && hasOwnProperty(o, 'brand');
+  valid = valid && hasOwnProperty(o, 'color');
+  valid = valid && typeof o.brand === 'string';
+  valid = valid && typeof o.color === 'string';
+  return valid && {
+    brand: o.brand,
+    color: o.color
+  };
+}
 ```
