@@ -259,3 +259,13 @@ function validateData (o) {
   };
 }
 ```
+### 6. How to Block Attackers IP 
+```bash
+attack can come from multiple machines, which tends to mean it can come from multiple IPs. However, once we know how to block one IP in a service we can block as many IPs as we like. In this section, we'll look at blocking a single attacking IP address in an Express service. To re-emphasize, this is not something that should normally be necessary, it's only a last-resort scenario in cases where deployment infrastructure is not handling these scenarios externally to our service.
+
+Recall that Express is essentially a middleware pattern on top of Node's core http (and https) modules. The http (and https) modules use the net module for TCP functionality. Each req and res object that are provided to the request listener function (which is passed to http.createServer) have a socket property which is the underlying TCP socket for the request and response. So req.socket.remoteAddress will contain the IP address of the client making a request to an Express service.
+
+Since Express passes the req and res objects to each piece of registered middleware in the order that they are registered, in order to block an attacking IP, all we need to do is register a middleware function before other middleware and check req.socket.remoteAddress.
+
+
+```
