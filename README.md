@@ -231,3 +231,14 @@ module.exports = async (fastify, opts) => {
   })
 }
   ```
+### 5. How to Validate Routes Using Express
+```bash
+Express does not offer any validation primitives or abstractions as a core part of the framework. 
+There are no particular validation practices recommended in the frameworks' documentation. 
+As a result, approaches to Express validation in the wild vary significantly. 
+While validation libraries do exist - for an example see htt‌ps://express-validator.github.io/docs/ - there is no standard approach. 
+It is even possible to use JSONSchema with Express via various middleware offerings but this is rarely seen in practice; 
+possibly because the implementations available cause significant performance overhead. 
+As a result the most common approach to validation in Express is to develop custom logic for the service as needed. 
+This isn't exactly recommended, but when dealing with legacy services it's useful to understand this aspect of real-world legacy Express development.
+```
