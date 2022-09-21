@@ -19,7 +19,7 @@ To prepare JSNSD certification exam Linux foundation provides one Learning Cours
  12. [Proxy Http Request With Single Origin Multiple Route](https://github.com/sudhir-j-sapkal/12_Proxy_Http_Request_Single_Origin_Multiroute)
  
  ## Quick Notes
- ### 1. How Not to Install Node
+ ### 01. How Not to Install Node
   ```bash
 Often Node.js can be installed with a particular Operating System's official or unofficial package manager. 
 For instance apt-get on Debian/Ubuntu, Brew on macOs, Chocolatey on Windows. 
@@ -34,7 +34,7 @@ use of sudo (a command which grants root privileges) on non-Windows systems.
 This is not an ideal setup for a developer machine and granting root privileges to the 
 install process of third-party libraries is not a good security practice.
   ```
-  ### 2. How to Use Express Generator 
+  ### 02. How to Use Express Generator 
   ```bash
   A tool called express-generator generates this structure with some other additions. 
   We'll use the generator in the next chapter, for now we're concentrating on the 
@@ -43,7 +43,7 @@ install process of third-party libraries is not a good security practice.
    express my-express-service
   
   ```
-  ### 3. Avoiding Parameter Pollution Attacks
+  ### 03. Avoiding Parameter Pollution Attacks
   ```bash
   The parameter pollution exploits a bug that's often created by developers when handling query string parameters.
   Even when we know about the potential for the bug, it can still be easy to forget. 
@@ -89,7 +89,7 @@ install process of third-party libraries is not a good security practice.
    This solution responds to the cases where query-string values are arrays by responding with an array where each value is converted. 
    However, again, the way to solve this issue is entirely context dependent.
   ```
-  ### 4. How to Validate Routes Using Fastify
+  ### 04. How to Validate Routes Using Fastify
   ```bash
   The recommended approach to route validation in Fastify is using the schema option which can be passed when declaring routes. 
   Fastify supports the JSONSchema format for declaring the rules for incoming (and also outgoing) data. 
@@ -231,7 +231,7 @@ module.exports = async (fastify, opts) => {
   })
 }
   ```
-### 5. How to Validate Routes Using Express
+### 05. How to Validate Routes Using Express
 ```bash
 Express does not offer any validation primitives or abstractions as a core part of the framework. 
 There are no particular validation practices recommended in the frameworks' documentation. 
@@ -259,7 +259,7 @@ function validateData (o) {
   };
 }
 ```
-### 6. How to Block Attackers IP 
+### 06. How to Block Attackers IP 
 ```bash
 attack can come from multiple machines, which tends to mean it can come from multiple IPs. However, once we know how to block one IP in a service we can block as many IPs as we like. In this section, we'll look at blocking a single attacking IP address in an Express service. To re-emphasize, this is not something that should normally be necessary, it's only a last-resort scenario in cases where deployment infrastructure is not handling these scenarios externally to our service.
 
@@ -267,5 +267,108 @@ Recall that Express is essentially a middleware pattern on top of Node's core ht
 
 Since Express passes the req and res objects to each piece of registered middleware in the order that they are registered, in order to block an attacking IP, all we need to do is register a middleware function before other middleware and check req.socket.remoteAddress.
 
+```
+### 07. Restrict User By IP
+```bash
+  app.use((req, res, next) => {
+  if (req.socket.remoteAddress === '111.34.55.211') {
+    const forbidden = new Error('Forbidden')
+    forbidden.status = 403
+    next(forbidden)
+    return
+  }
 
+  next()
+})
+```
+### 08. Return `text/plain` Using fastify
+```bash
+const data = require('../data')
+
+module.exports = async function (fastify, _opts) {
+  fastify.get('/', async function (_request, reply) {
+    reply.type('text/plain')
+    return await data()
+  })
+}
+```  
+### 09. Return `text/plain` using Express
+```bash
+app.get('/', async (_req, res) => {
+    res.contentType = 'text/plain'
+    res.send(await data())
+})
+```
+### 10. Implement Method Not Allowed for POST using fastify
+```bash
+fastify.post('/', async function(_request, reply) {
+    reply.methodNotAllowed()
+  })
+```
+### 11. Render view using fastify
+```bash
+### Inside app.js ###
+const pointOfView = require('point-of-view')
+const handlebars = require('handlebars')
+
+fastify.register(pointOfView, {
+    engine: { handlebars },
+    root: path.join(__dirname, 'views'),
+    layout: 'layout.hbs'
+  })
+
+## Route to Return View Inside routes/root.js##
+module.exports = async function (fastify, _opts) {
+  fastify.get('/me', async function (_request, reply) {
+    return reply.view('me.hbs')
+  })
+}
+```
+### 12. How & Where should we place hbs files
+```bash
+We should create view folder at the same level of app.js and below should be content of hbs files
+-----------------------------------------------------------------
+1. layout.hbs
+-----------------------------------------------------------------
+<html>
+<head>
+    <style>
+        body {
+            background: #333;
+            margin: 1.25rem
+        }
+        h1 {
+            color: #EEE;
+            font-family: sans-serif
+        }
+        a {
+            color: yellow;
+            font-size: 2rem;
+            font-family: sans-serif
+        }
+    </style>
+</head>
+<body>
+    {{{ body }}}
+</body>
+</html>
+-----------------------------------------------------------------
+2. me.hbs to render inside {{{body}}} 
+-----------------------------------------------------------------
+<h1>Sudhir Sapkal</h1>
+<h2>Demo Of View Loading Using fastify</h2>
+----------------------------------------------------------------
+```
+### 13. Not escape html inside fastify view
+```bash
+Using {{{variable_name }}} Will not escape html, {{ variable_name }} will escape html
+```
+### 14. Render view using Express js
+```bash
+app.set('views', join(__dirname, 'views'))
+app.set('view engine', 'hbs')
+
+app.get('/me', (_req, res) => {
+    res.render('me')
+})
 ```
